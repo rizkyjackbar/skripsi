@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stress Level Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Prediksi Tingkat Stres Anda</h1>
+        <form method="POST">
+            {% for factor, (min_val, max_val) in min_max_values.items() %}
+                <div class="form-group">
+                    <label for="{{ factor }}">{{ get_question_for_factor(factor, min_val, max_val) }}</label>
+                    <input type="range" name="{{ factor }}" min="{{ min_val }}" max="{{ max_val }}" value="{{ min_val }}" step="0.1" class="slider" id="{{ factor }}">
+                    <span id="{{ factor }}_value">{{ min_val }}</span>
+                </div>
+            {% endfor %}
+            <button type="submit" class="submit-btn">Kirim</button>
+        </form>
+
+        {% if stress_level %}
+            <div class="result">
+                <h3>Tingkat Stres Anda: {{ stress_level }}</h3>
+                <ul>
+                    {% for advice_item in advice %}
+                        <li>{{ advice_item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Update nilai slider pada saat bergerak
+        document.querySelectorAll('.slider').forEach(slider => {
+            slider.oninput = function() {
+                document.getElementById(slider.id + '_value').textContent = slider.value;
+            }
+        });
+    </script>
+</body>
+</html>
