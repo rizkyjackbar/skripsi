@@ -27,11 +27,13 @@
                         <label for="{{ factor }}_1">Ya</label>
                     </div>
                 {% else %}
-                    <input type="range" class="form-control-range slider" id="{{ factor }}" name="{{ factor }}" 
-                           min="{{ min_max[0] }}" max="{{ min_max[1] }}" value="{{ min_max[0] }}" 
-                           oninput="updateSliderValue(this, '{{ factor }}_percentage', {{ min_max[0] }}, {{ min_max[1] }})" required>
-                    <div class="slider-percentage" id="{{ factor }}_percentage">
-                        {{ min_max[0] }} (Min)
+                    <div class="slider-container">
+                        <input type="range" class="form-control-range slider" id="{{ factor }}" name="{{ factor }}" 
+                               min="{{ min_max[0] }}" max="{{ min_max[1] }}" value="{{ min_max[0] }}" 
+                               oninput="updateSliderValue(this, '{{ factor }}_percentage', {{ min_max[0] }}, {{ min_max[1] }})" required>
+                        <div class="slider-percentage" id="{{ factor }}_percentage">
+                            {{ min_max[0] }}
+                        </div>
                     </div>
                 {% endif %}
                 <div class="modal-buttons">
