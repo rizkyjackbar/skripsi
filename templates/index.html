@@ -24,32 +24,30 @@
         {% if stress_level %}
             <div class="result">
                 <h3>Tingkat Stres Anda: {{ stress_level }}</h3>
-                <ul>
-                    {% for advice_item in advice %}
-                    <li>{{ advice_item }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    {% endif %}
-</div>
+                <div class="advice">
+                    <p>{{ advice[0] }}</p> <!-- Tampilkan saran dalam paragraf utuh -->
+                </div>
+            </div>
+        {% endif %}
+    </div>
 
-<script>
-    // Update nilai slider dan persentase saat bergerak
-    document.querySelectorAll('.slider').forEach(slider => {
-        slider.oninput = function() {
-            // Update nilai slider
-            const value = parseFloat(this.value);
-            const min = parseFloat(this.min);
-            const max = parseFloat(this.max);
+    <script>
+        // Update nilai slider dan persentase saat bergerak
+        document.querySelectorAll('.slider').forEach(slider => {
+            slider.oninput = function() {
+                // Update nilai slider
+                const value = parseFloat(this.value);
+                const min = parseFloat(this.min);
+                const max = parseFloat(this.max);
 
-            // Hitung persentase
-            const percentage = ((value - min) / (max - min) * 100).toFixed(1);
+                // Hitung persentase
+                const percentage = ((value - min) / (max - min) * 100).toFixed(1);
 
-            // Tampilkan nilai dan persentase
-            document.getElementById(this.id + '_value').textContent = value;
-            document.getElementById(this.id + '_percentage').textContent = percentage + "%";
-        };
-    });
-</script>
+                // Tampilkan nilai dan persentase
+                document.getElementById(this.id + '_value').textContent = value;
+                document.getElementById(this.id + '_percentage').textContent = percentage + "%";
+            };
+        });
+    </script>
 </body>
 </html>

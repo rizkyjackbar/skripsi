@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 # Fungsi untuk memuat model
 def load_new_model():
-    model = tf.keras.models.load_model('model/stress_level_model_v2.h5')  # Pastikan path model benar
+    model = tf.keras.models.load_model('model/stress_level_model_v2.h5')
     return model
 
 # Fungsi untuk memuat dataset dan scaler
@@ -23,7 +23,7 @@ def load_dataset_and_scaler():
 def predict_stress(model, scaler, user_input):
     user_input_scaled = scaler.transform([user_input])
     prediction = model.predict(user_input_scaled)
-    predicted_class = np.argmax(prediction, axis=1)  # Ambil kelas dengan probabilitas tertinggi
+    predicted_class = np.argmax(prediction, axis=1)
     return predicted_class[0]
 
 # Fungsi untuk mendapatkan min-max dari dataset
@@ -59,8 +59,8 @@ def get_question_for_factor(factor, min_val, max_val):
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    df = pd.read_csv('StressLevelDataset.csv')  # Muat dataset
-    min_max_values = get_min_max_values(df)  # Dapatkan rentang min-max untuk setiap faktor
+    df = pd.read_csv('StressLevelDataset.csv')
+    min_max_values = get_min_max_values(df)
 
     if request.method == "POST":
         # Ambil input dari form
@@ -83,17 +83,17 @@ def index():
         else:
             stress_level = "Berat"
 
-        # Saran berdasarkan tingkat stres
+        # Saran berdasarkan tingkat stres dengan bahasa yang lebih santai dan digabungkan
         advices = {
-            0: ["Anda mungkin merasa sedikit terbebani, namun masih dapat mengelolanya. Cobalah untuk lebih sering beristirahat.",
-                "Cobalah untuk melakukan kegiatan yang menyenangkan, seperti berolahraga.",
-                "Jaga rutinitas harian Anda dan pastikan Anda punya waktu untuk bersantai."],
-            1: ["Disarankan untuk melakukan kegiatan relaksasi seperti meditasi.",
-                "Anda bisa mencoba untuk tidur lebih cukup atau mengatur waktu belajar.",
-                "Berkonsultasilah dengan seorang konselor atau teman dekat."],
-            2: ["Disarankan untuk mencari dukungan profesional, seperti berkonsultasi dengan seorang terapis.",
-                "Jangan ragu untuk meminta bantuan dari orang-orang terdekat.",
-                "Cobalah untuk merencanakan waktu untuk relaksasi secara teratur, seperti meditasi."]
+            0: [
+                "Kayaknya kamu cuma butuh istirahat sejenak, coba deh luangkan waktu buat kegiatan yang seru atau olahraga ringan. Coba buat rutinitas yang lebih santai biar bisa ngatur waktu lebih baik, jangan terlalu paksain diri. Masih bisa diatasi kok, coba lebih sering relaksasi, dan jaga kesehatan ya!"
+            ],
+            1: [
+                "Mungkin kamu bisa coba meditasi atau relaksasi biar pikiran lebih tenang. Coba tidur lebih cukup, atur waktu buat belajar atau kerja, jangan sampai overthinking. Gak ada salahnya ngobrol sama teman atau konselor biar merasa lebih ringan."
+            ],
+            2: [
+                "Mungkin udah waktunya cari dukungan profesional, kayak konsultan atau terapis, biar bisa bantu atasi masalah. Jangan ragu buat minta bantuan dari orang-orang terdekat, mereka pasti bakal siap bantu. Luangkan waktu untuk meditasi atau aktivitas lain yang bisa bikin pikiran lebih fresh, supaya gak stuck."
+            ]
         }
 
         advice = advices[predicted_class]
