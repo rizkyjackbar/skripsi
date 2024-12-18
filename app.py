@@ -62,47 +62,38 @@ def index():
     df = pd.read_csv('StressLevelDataset.csv')
     min_max_values = get_min_max_values(df)
 
-    # Inisialisasi variabel hasil
     stress_level = None
     advice = None
 
     if request.method == "POST":
-        try:
-            # Ambil input dari form
-            user_input = []
-            for col in min_max_values:
-                user_input.append(float(request.form[col]))
+        # Ambil input dari form
+        user_input = []
+        for col in min_max_values:
+            user_input.append(float(request.form[col]))
 
-            # Memuat model dan scaler
-            model = load_new_model()
-            scaler = load_dataset_and_scaler()
+        # Memuat model dan scaler
+        model = load_new_model()
+        scaler = load_dataset_and_scaler()
 
-            # Prediksi tingkat stres
-            predicted_class = predict_stress(model, scaler, user_input)
+        # Prediksi tingkat stres
+        predicted_class = predict_stress(model, scaler, user_input)
 
-            # Tentukan tingkat stres
-            if predicted_class == 0:
-                stress_level = "Ringan"
-            elif predicted_class == 1:
-                stress_level = "Sedang"
-            else:
-                stress_level = "Berat"
+        # Tentukan tingkat stres
+        if predicted_class == 0:
+            stress_level = "Ringan"
+        elif predicted_class == 1:
+            stress_level = "Sedang"
+        else:
+            stress_level = "Berat"
 
-            # Saran berdasarkan tingkat stres
-            advices = {
-                0: "Kayaknya kamu cuma butuh istirahat sejenak. Coba luangkan waktu buat hal yang bikin rileks.",
-                1: "Mungkin kamu bisa coba meditasi, relaksasi, dan ngobrol sama teman atau konselor.",
-                2: "Cari dukungan profesional seperti konsultan atau terapis. Jangan ragu minta bantuan orang terdekat."
-            }
-            advice = advices[predicted_class]
+        # Saran berdasarkan tingkat stres
+        advices = {
+            0: "Kayaknya kamu cuma butuh istirahat sejenak. Coba luangkan waktu buat hal yang bikin rileks.",
+            1: "Mungkin kamu bisa coba meditasi, relaksasi, dan ngobrol sama teman atau konselor.",
+            2: "Cari dukungan profesional seperti konsultan atau terapis. Jangan ragu minta bantuan orang terdekat."
+        }
+        advice = advices[predicted_class]
 
-            # Debugging
-            print(f"Predicted class: {predicted_class}, Stress level: {stress_level}, Advice: {advice}")
-
-        except Exception as e:
-            print(f"Error: {e}")
-
-    # Render halaman dengan hasil (jika ada)
     return render_template('index.html', stress_level=stress_level, advice=advice, min_max_values=min_max_values, get_question_for_factor=get_question_for_factor)
 
 if __name__ == "__main__":
