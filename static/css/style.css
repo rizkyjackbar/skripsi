@@ -190,3 +190,9 @@ body {
     text-align: justify;
     /* Rata kiri-kanan untuk tampilan rapi */
 }
+
+.emoticon {
+    font-size: 2rem; /* Ukuran emoticon */
+    margin-left: 10px; /* Jarak dari teks */
+    vertical-align: middle; /* Posisikan emoticon sejajar dengan teks */
+}

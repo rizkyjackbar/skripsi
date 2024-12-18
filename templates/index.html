@@ -75,13 +75,17 @@
                 </div>
                 <div class="modal-body text-center">
                     {% if stress_level %}
-                    <h4 class="mb-3">Tingkat Stres Anda: <span class="text-primary">{{ stress_level }}</span></h4>
+                    <h4 class="mb-3">Tingkat Stres Anda: 
+                        <span class="text-primary">{{ stress_level }}</span> 
+                        <span class="emoticon">{{ emoticon }}</span>
+                    </h4>
                     <p>{{ advice }}</p>
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
+    
 
     <form id="stressForm" method="POST" style="display: none;">
         {% for factor, min_max in min_max_values.items() %}

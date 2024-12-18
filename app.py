@@ -92,6 +92,7 @@ def index():
 
     stress_level = None
     advice = None
+    emoticon = None
 
     if request.method == "POST":
         # Ambil input dari form
@@ -109,10 +110,13 @@ def index():
         # Tentukan tingkat stres
         if predicted_class == 0:
             stress_level = "Ringan"
+            emoticon = "😊"  # Emoticon untuk stres ringan
         elif predicted_class == 1:
             stress_level = "Sedang"
+            emoticon = "😐"  # Emoticon untuk stres sedang
         else:
             stress_level = "Berat"
+            emoticon = "😟"  # Emoticon untuk stres berat
 
         # Saran berdasarkan tingkat stres
         advices = {
@@ -122,7 +126,8 @@ def index():
         }
         advice = advices[predicted_class]
 
-    return render_template('index.html', stress_level=stress_level, advice=advice, min_max_values=min_max_values, get_question_for_factor=get_question_for_factor)
+    return render_template('index.html', stress_level=stress_level, advice=advice, emoticon=emoticon,
+                           min_max_values=min_max_values, get_question_for_factor=get_question_for_factor)
 
 if __name__ == "__main__":
     app.run(debug=True)
