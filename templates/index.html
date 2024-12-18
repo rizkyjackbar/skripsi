@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prediksi Tingkat Stres</title>
-    <!-- Menambahkan Bootstrap dari CDN -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        .slider-value {
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -17,7 +21,7 @@
                 <div class="form-group">
                     <label>{{ get_question_for_factor(factor, min_max[0], min_max[1]) }}</label>
                     {% if factor == 'mental_health_history' %}
-                        <!-- Radio buttons untuk Riwayat Masalah Kesehatan Mental -->
+                        <!-- Radio buttons -->
                         <div class="d-flex justify-content-between">
                             <div>
                                 <input type="radio" id="{{ factor }}_0" name="{{ factor }}" value="0" required>
@@ -29,9 +33,10 @@
                             </div>
                         </div>
                     {% else %}
-                        <!-- Input untuk rentang nilai -->
-                        <input type="range" class="form-control-range" name="{{ factor }}" min="{{ min_max[0] }}" max="{{ min_max[1] }}" value="{{ min_max[0] }}" required>
-                        <span>{{ min_max[0] }} - {{ min_max[1] }}</span>
+                        <!-- Slider -->
+                        <input type="range" class="form-control-range slider" name="{{ factor }}" min="{{ min_max[0] }}" max="{{ min_max[1] }}" value="{{ min_max[0] }}" 
+                            oninput="updateSliderValue(this, '{{ factor }}_value')" required>
+                        <span class="slider-value" id="{{ factor }}_value">{{ min_max[0] }}</span>
                     {% endif %}
                 </div>
             {% endfor %}
@@ -49,7 +54,11 @@
 
     <!-- Menambahkan Bootstrap JS dan jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function updateSliderValue(slider, displayId) {
+            const sliderValue = document.getElementById(displayId);
+            sliderValue.textContent = slider.value;
+        }
+    </script>
 </body>
 </html>
