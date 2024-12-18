@@ -15,6 +15,7 @@
                     <label for="{{ factor }}">{{ get_question_for_factor(factor, min_val, max_val) }}</label>
                     <input type="range" name="{{ factor }}" min="{{ min_val }}" max="{{ max_val }}" value="{{ min_val }}" step="0.1" class="slider" id="{{ factor }}">
                     <span id="{{ factor }}_value">{{ min_val }}</span>
+                    (<span id="{{ factor }}_percentage">0%</span>)
                 </div>
             {% endfor %}
             <button type="submit" class="submit-btn">Kirim</button>
@@ -25,20 +26,30 @@
                 <h3>Tingkat Stres Anda: {{ stress_level }}</h3>
                 <ul>
                     {% for advice_item in advice %}
-                        <li>{{ advice_item }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-    </div>
+                    <li>{{ advice_item }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+</div>
 
-    <script>
-        // Update nilai slider pada saat bergerak
-        document.querySelectorAll('.slider').forEach(slider => {
-            slider.oninput = function() {
-                document.getElementById(slider.id + '_value').textContent = slider.value;
-            }
-        });
-    </script>
+<script>
+    // Update nilai slider dan persentase saat bergerak
+    document.querySelectorAll('.slider').forEach(slider => {
+        slider.oninput = function() {
+            // Update nilai slider
+            const value = parseFloat(this.value);
+            const min = parseFloat(this.min);
+            const max = parseFloat(this.max);
+
+            // Hitung persentase
+            const percentage = ((value - min) / (max - min) * 100).toFixed(1);
+
+            // Tampilkan nilai dan persentase
+            document.getElementById(this.id + '_value').textContent = value;
+            document.getElementById(this.id + '_percentage').textContent = percentage + "%";
+        };
+    });
+</script>
 </body>
 </html>
