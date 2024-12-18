@@ -4,61 +4,125 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prediksi Tingkat Stres</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .slider-value {
-            font-weight: bold;
-            color: #333;
-        }
-    </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="text-center mb-5">Prediksi Tingkat Stres</h1>
-
-        <form method="POST">
-            {% for factor, min_max in min_max_values.items() %}
-                <div class="form-group">
-                    <label>{{ get_question_for_factor(factor, min_max[0], min_max[1]) }}</label>
-                    {% if factor == 'mental_health_history' %}
-                        <!-- Radio buttons -->
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <input type="radio" id="{{ factor }}_0" name="{{ factor }}" value="0" required>
-                                <label for="{{ factor }}_0">Tidak</label>
-                            </div>
-                            <div>
-                                <input type="radio" id="{{ factor }}_1" name="{{ factor }}" value="1" required>
-                                <label for="{{ factor }}_1">Ya</label>
-                            </div>
-                        </div>
-                    {% else %}
-                        <!-- Slider -->
-                        <input type="range" class="form-control-range slider" name="{{ factor }}" min="{{ min_max[0] }}" max="{{ min_max[1] }}" value="{{ min_max[0] }}" 
-                            oninput="updateSliderValue(this, '{{ factor }}_value')" required>
-                        <span class="slider-value" id="{{ factor }}_value">{{ min_max[0] }}</span>
-                    {% endif %}
-                </div>
-            {% endfor %}
-
-            <button type="submit" class="btn btn-success btn-block">Prediksi</button>
-        </form>
-
-        {% if stress_level %}
-            <div class="result mt-5 p-4 rounded shadow">
-                <h3 class="text-center">Tingkat Stres Anda : {{ stress_level }}</h3>
-                <p>{{ advice[0] }}</p>
-            </div>
-        {% endif %}
+    <div class="start-container">
+        <button class="btn btn-success" onclick="startQuestions()">Mulai Pertanyaan</button>
     </div>
 
-    <!-- Menambahkan Bootstrap JS dan jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    {% for factor, min_max in min_max_values.items() %}
+        <div id="modal_{{ loop.index }}" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('modal_{{ loop.index }}')">&times;</span>
+                <h4>{{ get_question_for_factor(factor, min_max[0], min_max[1]) }}</h4>
+                {% if factor == 'mental_health_history' %}
+                    <div>
+                        <input type="radio" id="{{ factor }}_0" name="{{ factor }}" value="0" required>
+                        <label for="{{ factor }}_0">Tidak</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="{{ factor }}_1" name="{{ factor }}" value="1" required>
+                        <label for="{{ factor }}_1">Ya</label>
+                    </div>
+                {% else %}
+                    <input type="range" class="form-control-range slider" id="{{ factor }}" name="{{ factor }}" 
+                           min="{{ min_max[0] }}" max="{{ min_max[1] }}" value="{{ min_max[0] }}" 
+                           oninput="updateSliderValue(this, '{{ factor }}_percentage', {{ min_max[0] }}, {{ min_max[1] }})" required>
+                    <div class="slider-percentage" id="{{ factor }}_percentage">
+                        {{ min_max[0] }} (Min)
+                    </div>
+                {% endif %}
+                <div class="modal-buttons">
+                    {% if not loop.last %}
+                        <button class="btn btn-secondary" onclick="goToPrevious({{ loop.index }})">Sebelumnya</button>
+                        <button class="btn btn-primary" onclick="goToNext({{ loop.index }})">Selanjutnya</button>
+                    {% else %}
+                        <button class="btn btn-secondary" onclick="goToPrevious({{ loop.index }})">Sebelumnya</button>
+                        <button class="btn btn-success" onclick="submitForm()">Prediksi</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('resultModal')">&times;</span>
+            {% if stress_level %}
+                <h3 class="text-center">Tingkat Stres Anda: {{ stress_level }}</h3>
+                <p>{{ advice }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <form id="stressForm" method="POST" style="display: none;">
+        {% for factor, min_max in min_max_values.items() %}
+            <input type="hidden" id="hidden_{{ factor }}" name="{{ factor }}">
+        {% endfor %}
+    </form>
+
     <script>
-        function updateSliderValue(slider, displayId) {
-            const sliderValue = document.getElementById(displayId);
-            sliderValue.textContent = slider.value;
+        let currentIndex = 1;
+
+        function startQuestions() {
+            showModal(`modal_${currentIndex}`);
         }
+
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = "block";
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        function goToPrevious(index) {
+            if (index > 1) {
+                closeModal(`modal_${index}`);
+                currentIndex = index - 1;
+                showModal(`modal_${currentIndex}`);
+            }
+        }
+
+        function goToNext(index) {
+            const currentModal = document.getElementById(`modal_${index}`);
+            const inputField = currentModal.querySelector('input[name]');
+            if (inputField) {
+                const hiddenInput = document.getElementById(`hidden_${inputField.name}`);
+                hiddenInput.value = inputField.value;
+            }
+
+            closeModal(`modal_${index}`);
+            currentIndex = index + 1;
+            showModal(`modal_${currentIndex}`);
+        }
+
+        function submitForm() {
+            const currentModal = document.getElementById(`modal_${currentIndex}`);
+            const inputField = currentModal.querySelector('input[name]');
+            if (inputField) {
+                const hiddenInput = document.getElementById(`hidden_${inputField.name}`);
+                hiddenInput.value = inputField.value;
+            }
+
+            closeModal(`modal_${currentIndex}`);
+            document.getElementById("stressForm").submit();
+        }
+
+        // Fungsi untuk memperbarui nilai slider dan menampilkan persentase
+        function updateSliderValue(slider, displayId, min, max) {
+            const value = parseFloat(slider.value);
+            const percentage = Math.round(((value - min) / (max - min)) * 100);
+            document.getElementById(displayId).textContent = `${value} (${percentage}%)`;
+        }
+
+        {% if stress_level %}
+            document.addEventListener("DOMContentLoaded", function () {
+                showModal('resultModal');
+            });
+        {% endif %}
     </script>
 </body>
 </html>

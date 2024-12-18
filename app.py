@@ -62,44 +62,48 @@ def index():
     df = pd.read_csv('StressLevelDataset.csv')
     min_max_values = get_min_max_values(df)
 
+    # Inisialisasi variabel hasil
+    stress_level = None
+    advice = None
+
     if request.method == "POST":
-        # Ambil input dari form
-        user_input = []
-        for col in min_max_values:
-            user_input.append(float(request.form[col]))
+        try:
+            # Ambil input dari form
+            user_input = []
+            for col in min_max_values:
+                user_input.append(float(request.form[col]))
 
-        # Memuat model dan scaler
-        model = load_new_model()
-        scaler = load_dataset_and_scaler()
+            # Memuat model dan scaler
+            model = load_new_model()
+            scaler = load_dataset_and_scaler()
 
-        # Prediksi tingkat stres
-        predicted_class = predict_stress(model, scaler, user_input)
+            # Prediksi tingkat stres
+            predicted_class = predict_stress(model, scaler, user_input)
 
-        # Tentukan tingkat stres
-        if predicted_class == 0:
-            stress_level = "Ringan"
-        elif predicted_class == 1:
-            stress_level = "Sedang"
-        else:
-            stress_level = "Berat"
+            # Tentukan tingkat stres
+            if predicted_class == 0:
+                stress_level = "Ringan"
+            elif predicted_class == 1:
+                stress_level = "Sedang"
+            else:
+                stress_level = "Berat"
 
-        # Saran berdasarkan tingkat stres dengan bahasa yang lebih santai dan digabungkan
-        advices = {
-            0: [
-                "Kayaknya kamu cuma butuh istirahat sejenak, coba deh luangkan waktu buat kegiatan yang seru atau olahraga ringan. Coba buat rutinitas yang lebih santai biar bisa ngatur waktu lebih baik, jangan terlalu paksain diri. Masih bisa diatasi kok, coba lebih sering relaksasi, dan jaga kesehatan ya!"
-            ],
-            1: [
-                "Mungkin kamu bisa coba meditasi atau relaksasi biar pikiran lebih tenang. Coba tidur lebih cukup, atur waktu buat belajar atau kerja, jangan sampai overthinking. Gak ada salahnya ngobrol sama teman atau konselor biar merasa lebih ringan."
-            ],
-            2: [
-                "Mungkin udah waktunya cari dukungan profesional, kayak konsultan atau terapis, biar bisa bantu atasi masalah. Jangan ragu buat minta bantuan dari orang-orang terdekat, mereka pasti bakal siap bantu. Luangkan waktu untuk meditasi atau aktivitas lain yang bisa bikin pikiran lebih fresh, supaya gak stuck."
-            ]
-        }
+            # Saran berdasarkan tingkat stres
+            advices = {
+                0: "Kayaknya kamu cuma butuh istirahat sejenak. Coba luangkan waktu buat hal yang bikin rileks.",
+                1: "Mungkin kamu bisa coba meditasi, relaksasi, dan ngobrol sama teman atau konselor.",
+                2: "Cari dukungan profesional seperti konsultan atau terapis. Jangan ragu minta bantuan orang terdekat."
+            }
+            advice = advices[predicted_class]
 
-        advice = advices[predicted_class]
-        return render_template('index.html', stress_level=stress_level, advice=advice, min_max_values=min_max_values, get_question_for_factor=get_question_for_factor)
+            # Debugging
+            print(f"Predicted class: {predicted_class}, Stress level: {stress_level}, Advice: {advice}")
 
-    return render_template('index.html', stress_level=None, advice=None, min_max_values=min_max_values, get_question_for_factor=get_question_for_factor)
+        except Exception as e:
+            print(f"Error: {e}")
+
+    # Render halaman dengan hasil (jika ada)
+    return render_template('index.html', stress_level=stress_level, advice=advice, min_max_values=min_max_values, get_question_for_factor=get_question_for_factor)
 
 if __name__ == "__main__":
     app.run(debug=True)
