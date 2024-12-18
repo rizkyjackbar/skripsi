@@ -13,7 +13,7 @@ def load_new_model():
 
 # Fungsi untuk memuat dataset dan scaler
 def load_dataset_and_scaler():
-    df = pd.read_csv('StressLevelDataset.csv')  # Pastikan path dataset benar
+    df = pd.read_csv('StressLevelDataset.csv')
     scaler = StandardScaler()
     X = df.drop(columns=['stress_level'])
     scaler.fit(X)
