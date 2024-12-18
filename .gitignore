@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+.idea/
+.vscode/
+
+# Sistem Operasi
+.DS_Store
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Log files
+*.log
