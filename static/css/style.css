@@ -11,16 +11,16 @@ body {
     background-color: #D7D3BF;
     /* Warna dasar modal */
     border-radius: 10px;
-    border: 1px solid #C1BAA1;
-    color: #333;
+    /* border: 1px solid #C1BAA1; */
+    /* color: #333; */
 }
 
 .close {
     position: absolute;
-    top: 10px;
+    top: 5px;
     right: 15px;
     color: #A59D84;
-    font-size: 28px;
+    font-size: 25px;
     font-weight: bold;
 }
 
@@ -109,7 +109,7 @@ body {
 
 /* Presentase Slider */
 .slider-percentage {
-    font-size: 16px;
+    font-size: 15px;
     color: #A59D84;
     font-weight: bold;
     min-width: 80px;
@@ -181,18 +181,17 @@ body {
 
 /* Deskripsi Pertanyaan */
 .description-text {
-    font-size: 14px;
-    /* Ukuran font lebih kecil */
+    font-size: 10px;
     color: #7a7465;
-    /* Warna teks agak buram */
-    margin-bottom: 10px;
-    /* Jarak antara deskripsi dan slider */
+    margin-bottom: 20px;
     text-align: justify;
-    /* Rata kiri-kanan untuk tampilan rapi */
 }
 
 .emoticon {
-    font-size: 2rem; /* Ukuran emoticon */
-    margin-left: 10px; /* Jarak dari teks */
-    vertical-align: middle; /* Posisikan emoticon sejajar dengan teks */
+    font-size: 4rem;
+    /* Ukuran emoticon diperbesar */
+    margin-left: 10px;
+    /* Jarak dari teks */
+    vertical-align: middle;
+    /* Posisikan emoticon sejajar dengan teks */
 }
