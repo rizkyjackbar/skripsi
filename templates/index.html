@@ -1,53 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stress Level Prediction</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Prediksi Tingkat Stres</title>
+    <!-- Menambahkan Bootstrap dari CDN -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Prediksi Tingkat Stres Anda</h1>
+        <h1 class="text-center mb-5">Prediksi Tingkat Stres</h1>
+
         <form method="POST">
-            {% for factor, (min_val, max_val) in min_max_values.items() %}
+            {% for factor, min_max in min_max_values.items() %}
                 <div class="form-group">
-                    <label for="{{ factor }}">{{ get_question_for_factor(factor, min_val, max_val) }}</label>
-                    <input type="range" name="{{ factor }}" min="{{ min_val }}" max="{{ max_val }}" value="{{ min_val }}" step="0.1" class="slider" id="{{ factor }}">
-                    <span id="{{ factor }}_value">{{ min_val }}</span>
-                    (<span id="{{ factor }}_percentage">0%</span>)
+                    <label>{{ get_question_for_factor(factor, min_max[0], min_max[1]) }}</label>
+                    {% if factor == 'mental_health_history' %}
+                        <!-- Radio buttons untuk Riwayat Masalah Kesehatan Mental -->
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <input type="radio" id="{{ factor }}_0" name="{{ factor }}" value="0" required>
+                                <label for="{{ factor }}_0">Tidak</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="{{ factor }}_1" name="{{ factor }}" value="1" required>
+                                <label for="{{ factor }}_1">Ya</label>
+                            </div>
+                        </div>
+                    {% else %}
+                        <!-- Input untuk rentang nilai -->
+                        <input type="range" class="form-control-range" name="{{ factor }}" min="{{ min_max[0] }}" max="{{ min_max[1] }}" value="{{ min_max[0] }}" required>
+                        <span>{{ min_max[0] }} - {{ min_max[1] }}</span>
+                    {% endif %}
                 </div>
             {% endfor %}
-            <button type="submit" class="submit-btn">Kirim</button>
+
+            <button type="submit" class="btn btn-success btn-block">Prediksi</button>
         </form>
 
         {% if stress_level %}
-            <div class="result">
-                <h3>Tingkat Stres Anda: {{ stress_level }}</h3>
-                <div class="advice">
-                    <p>{{ advice[0] }}</p> <!-- Tampilkan saran dalam paragraf utuh -->
-                </div>
+            <div class="result mt-5 p-4 rounded shadow">
+                <h3 class="text-center">Tingkat Stres Anda : {{ stress_level }}</h3>
+                <p>{{ advice[0] }}</p>
             </div>
         {% endif %}
     </div>
 
-    <script>
-        // Update nilai slider dan persentase saat bergerak
-        document.querySelectorAll('.slider').forEach(slider => {
-            slider.oninput = function() {
-                // Update nilai slider
-                const value = parseFloat(this.value);
-                const min = parseFloat(this.min);
-                const max = parseFloat(this.max);
-
-                // Hitung persentase
-                const percentage = ((value - min) / (max - min) * 100).toFixed(1);
-
-                // Tampilkan nilai dan persentase
-                document.getElementById(this.id + '_value').textContent = value;
-                document.getElementById(this.id + '_percentage').textContent = percentage + "%";
-            };
-        });
-    </script>
+    <!-- Menambahkan Bootstrap JS dan jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
