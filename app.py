@@ -41,7 +41,7 @@ def get_question_for_factor(factor, min_val, max_val):
         'headache': f"Seberapa sering Anda merasa sakit kepala? (Rentang: {min_val} - {max_val})",
         'blood_pressure': f"Seberapa tinggi tekanan darah Anda saat ini? (Rentang: {min_val} - {max_val})",
         'sleep_quality': f"Seberapa baik kualitas tidur Anda? (Rentang: {min_val} - {max_val})",
-        'breathing_problem': f"Apakah Anda mengalami masalah pernapasan? (Rentang: {min_val} - {max_val}) (0 = Tidak, 1 = Ya)",
+        'breathing_problem': f"Apakah Anda mengalami masalah pernapasan? (Rentang: {min_val} - {max_val})",
         'noise_level': f"Seberapa berisik lingkungan sekitar Anda? (Rentang: {min_val} - {max_val})",
         'living_conditions': f"Seberapa baik kondisi tempat tinggal Anda? (Rentang: {min_val} - {max_val})",
         'safety': f"Seberapa aman lingkungan tempat tinggal Anda? (Rentang: {min_val} - {max_val})",
