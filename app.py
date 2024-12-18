@@ -57,6 +57,34 @@ def get_question_for_factor(factor, min_val, max_val):
     }
     return questions.get(factor, "Pertanyaan tidak tersedia")
 
+# Fungsi untuk mendapatkan deskripsi singkat sesuai dengan faktor
+def get_description_for_factor(factor):
+    descriptions = {
+        'anxiety_level': "Contohnya, apakah Anda sering merasa gugup atau tidak tenang dalam situasi sehari-hari?",
+        'self_esteem': "Ini mencakup kemampuan untuk menghadapi tantangan atau keyakinan pada potensi diri.",
+        'mental_health_history': "Apakah Anda memiliki riwayat masalah kesehatan mental, seperti gangguan kecemasan atau depresi?",
+        'depression': "Apakah Anda merasa sedih, kehilangan minat, atau kesulitan dalam menjalani aktivitas sehari-hari?",
+        'headache': "Misalnya, apakah sakit kepala terjadi setiap hari atau hanya sesekali.",
+        'blood_pressure': "Ini mencerminkan kondisi fisik yang dapat dipengaruhi oleh stres.",
+        'sleep_quality': "Apakah Anda merasa cukup istirahat setelah tidur atau sering mengalami gangguan tidur?",
+        'breathing_problem': "Seperti sesak napas atau gangguan lainnya.",
+        'noise_level': "Ini mencakup tingkat gangguan suara yang memengaruhi konsentrasi dan kenyamanan.",
+        'living_conditions': "Ini mencakup kebersihan, keamanan, dan kenyamanan rumah.",
+        'safety': "Misalnya, apakah Anda merasa nyaman berjalan di sekitar lingkungan Anda.",
+        'basic_needs': "Seperti makanan, pakaian, dan akses air bersih.",
+        'academic_performance': "Misalnya, apakah Anda merasa berhasil dalam tugas dan ujian?",
+        'study_load': "Ini mencakup jumlah tugas, ujian, dan tekanan akademik lainnya.",
+        'teacher_student_relationship': "Apakah Anda merasa didukung atau ada konflik yang menghambat?",
+        'future_career_concerns': "Ini mencakup rasa cemas tentang pekerjaan atau pilihan karir.",
+        'social_support': "Misalnya, dari teman, keluarga, atau komunitas.",
+        'peer_pressure': "Ini mencakup pengaruh sosial yang mungkin memengaruhi keputusan Anda.",
+        'extracurricular_activities': "Ini mencakup keterlibatan dalam organisasi atau aktivitas di luar akademik.",
+        'bullying': "Ini mencakup perilaku tidak menyenangkan yang dilakukan orang lain kepada Anda."
+    }
+    return descriptions.get(factor, "")
+# Tambahkan setelah deklarasi app = Flask(__name__)
+app.jinja_env.globals['get_description_for_factor'] = get_description_for_factor
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     df = pd.read_csv('StressLevelDataset.csv')

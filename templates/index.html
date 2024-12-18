@@ -37,6 +37,9 @@
                         <label for="{{ factor }}_1" class="form-check-label">Ya</label>
                     </div>
                     {% else %}
+                    <p class="description-text">
+                        {{ get_description_for_factor(factor) }}
+                    </p>
                     <div class="slider-container d-flex align-items-center">
                         <input type="range" class="form-range flex-grow-1 slider" id="{{ factor }}" name="{{ factor }}"
                             min="{{ min_max[0] }}" max="{{ min_max[1] }}" value="{{ min_max[0] }}"

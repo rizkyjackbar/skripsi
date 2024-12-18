@@ -1,13 +1,15 @@
 /* Warna Umum */
 body {
     font-family: Arial, sans-serif;
-    background-color: #ECEBDE; /* Warna latar belakang */
+    background-color: #ECEBDE;
+    /* Warna latar belakang */
     color: #333;
 }
 
 /* Modal */
 .modal-content {
-    background-color: #D7D3BF; /* Warna dasar modal */
+    background-color: #D7D3BF;
+    /* Warna dasar modal */
     border-radius: 10px;
     border: 1px solid #C1BAA1;
     color: #333;
@@ -31,7 +33,8 @@ body {
 
 /* Tombol Utama (Mulai) */
 .start-container .start-button {
-    background-color: #A59D84; /* Warna tombol start */
+    background-color: #A59D84;
+    /* Warna tombol start */
     color: #fff;
     font-size: 18px;
     font-weight: bold;
@@ -42,7 +45,8 @@ body {
 }
 
 .start-container .start-button:hover {
-    background-color: #C1BAA1; /* Warna hover */
+    background-color: #C1BAA1;
+    /* Warna hover */
     color: #fff;
 }
 
@@ -59,7 +63,8 @@ body {
     appearance: none;
     width: 100%;
     height: 10px;
-    background: #C1BAA1; /* Warna slider track */
+    background: #C1BAA1;
+    /* Warna slider track */
     border-radius: 5px;
     outline: none;
     transition: background-color 0.3s ease;
@@ -70,7 +75,8 @@ body {
     appearance: none;
     width: 20px;
     height: 20px;
-    background: #A59D84; /* Warna slider thumb */
+    background: #A59D84;
+    /* Warna slider thumb */
     border-radius: 50%;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -79,22 +85,26 @@ body {
 .slider::-moz-range-thumb {
     width: 20px;
     height: 20px;
-    background: #A59D84; /* Warna slider thumb */
+    background: #A59D84;
+    /* Warna slider thumb */
     border-radius: 50%;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
 .slider:hover {
-    background: #D7D3BF; /* Warna hover slider track */
+    background: #D7D3BF;
+    /* Warna hover slider track */
 }
 
 .slider::-webkit-slider-thumb:hover {
-    background: #C1BAA1; /* Warna hover slider thumb */
+    background: #C1BAA1;
+    /* Warna hover slider thumb */
 }
 
 .slider::-moz-range-thumb:hover {
-    background: #C1BAA1; /* Warna hover slider thumb */
+    background: #C1BAA1;
+    /* Warna hover slider thumb */
 }
 
 /* Presentase Slider */
@@ -108,7 +118,8 @@ body {
 
 /* Modal Header */
 .modal-header {
-    background-color: #A59D84; /* Warna header modal */
+    background-color: #A59D84;
+    /* Warna header modal */
     color: #fff;
     border-bottom: 1px solid #C1BAA1;
     padding: 10px 20px;
@@ -133,31 +144,49 @@ body {
 }
 
 .modal-buttons .btn-secondary {
-    background-color: #C1BAA1; /* Warna tombol sebelumnya */
+    background-color: #C1BAA1;
+    /* Warna tombol sebelumnya */
     border: none;
     color: #fff;
 }
 
 .modal-buttons .btn-secondary:hover {
-    background-color: #D7D3BF; /* Hover warna tombol sebelumnya */
+    background-color: #D7D3BF;
+    /* Hover warna tombol sebelumnya */
 }
 
 .modal-buttons .btn-primary {
-    background-color: #A59D84; /* Warna tombol selanjutnya */
+    background-color: #A59D84;
+    /* Warna tombol selanjutnya */
     border: none;
     color: #fff;
 }
 
 .modal-buttons .btn-primary:hover {
-    background-color: #C1BAA1; /* Hover warna tombol selanjutnya */
+    background-color: #C1BAA1;
+    /* Hover warna tombol selanjutnya */
 }
 
 .modal-buttons .btn-success {
-    background-color: #A59D84; /* Warna tombol prediksi */
+    background-color: #A59D84;
+    /* Warna tombol prediksi */
     border: none;
     color: #fff;
 }
 
 .modal-buttons .btn-success:hover {
-    background-color: #C1BAA1; /* Hover warna tombol prediksi */
+    background-color: #C1BAA1;
+    /* Hover warna tombol prediksi */
+}
+
+/* Deskripsi Pertanyaan */
+.description-text {
+    font-size: 14px;
+    /* Ukuran font lebih kecil */
+    color: #7a7465;
+    /* Warna teks agak buram */
+    margin-bottom: 10px;
+    /* Jarak antara deskripsi dan slider */
+    text-align: justify;
+    /* Rata kiri-kanan untuk tampilan rapi */
 }
