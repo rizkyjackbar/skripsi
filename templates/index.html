@@ -10,6 +10,29 @@
 </head>
 
 <body class="bg-light">
+    <!-- Popup Input Nama -->
+    <div id="nameModal" class="modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow">
+                <span class="close" onclick="closeModal('nameModal')">&times;</span>
+                <div class="modal-header">
+                    <h4 class="modal-title">Masukkan Nama Anda</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="nameForm">
+                        <div class="form-group">
+                            <label for="userName">Nama:</label>
+                            <input type="text" class="form-control" id="userName" name="userName" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" onclick="submitName()">Lanjutkan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Tombol Mulai -->
     <div class="container d-flex justify-content-center align-items-center vh-100">
         <button class="btn btn-success btn-lg start-button" onclick="startQuestions()">Mulai Pertanyaan</button>
@@ -71,12 +94,12 @@
             <div class="modal-content shadow">
                 <span class="close" onclick="closeModal('resultModal')">&times;</span>
                 <div class="modal-header bg-success text-white">
-                    <h3 class="modal-title text-center w-100">Hasil Prediksi</h3>
+                    <h3 class="modal-title text-center w-100" id="resultTitle">Haiii, {{ userName }}</h3>
                 </div>
                 <div class="modal-body text-center">
                     <span class="emoticon">{{ emoticon }}</span>
                     {% if stress_level %}
-                    <h4 class="mb-3">Tingkat Stres Anda :
+                    <h4 class="mb-3">Tingkat Stres Anda:
                         <span class="font-weight-bold">{{ stress_level }}</span>
                     </h4>
                     <p>{{ advice }}</p>
@@ -86,7 +109,6 @@
         </div>
     </div>
 
-
     <form id="stressForm" method="POST" style="display: none;">
         {% for factor, min_max in min_max_values.items() %}
         <input type="hidden" id="hidden_{{ factor }}" name="{{ factor }}">
@@ -95,19 +117,37 @@
 
     <script>
         let currentIndex = 1;
+        let userName = "";  // Variabel untuk menyimpan nama pengguna
 
+        // Fungsi untuk memulai pertanyaan
         function startQuestions() {
-            showModal(`modal_${currentIndex}`);
+            showModal('nameModal');  // Tampilkan popup untuk input nama
         }
 
+        // Fungsi untuk menangani input nama pengguna
+        function submitName() {
+            userName = document.getElementById('userName').value;
+            if (userName) {
+                closeModal('nameModal');
+                showModal(`modal_${currentIndex}`);
+                // Menampilkan nama di hasil prediksi
+                document.getElementById('resultTitle').textContent = `Haiii, ${userName}`;
+            } else {
+                alert("Nama tidak boleh kosong");
+            }
+        }
+
+        // Fungsi untuk menampilkan modal
         function showModal(modalId) {
             document.getElementById(modalId).style.display = "block";
         }
 
+        // Fungsi untuk menutup modal
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = "none";
         }
 
+        // Fungsi untuk pergi ke modal sebelumnya
         function goToPrevious(index) {
             if (index > 1) {
                 closeModal(`modal_${index}`);
@@ -116,6 +156,7 @@
             }
         }
 
+        // Fungsi untuk pergi ke modal selanjutnya
         function goToNext(index) {
             const currentModal = document.getElementById(`modal_${index}`);
             const inputField = currentModal.querySelector('input[name]');
@@ -129,6 +170,7 @@
             showModal(`modal_${currentIndex}`);
         }
 
+        // Fungsi untuk submit form dan prediksi
         function submitForm() {
             const currentModal = document.getElementById(`modal_${currentIndex}`);
             const inputField = currentModal.querySelector('input[name]');
@@ -137,21 +179,17 @@
                 hiddenInput.value = inputField.value;
             }
 
-            closeModal(`modal_${currentIndex}`);
-            document.getElementById("stressForm").submit();
+            // Jangan menutup modal di sini, biarkan modal tetap terbuka untuk prediksi
+            // Melanjutkan ke modal hasil setelah prediksi
+            showModal('resultModal');
         }
 
+        // Fungsi untuk update nilai slider
         function updateSliderValue(slider, displayId, min, max) {
             const value = parseFloat(slider.value);
             const percentage = Math.round(((value - min) / (max - min)) * 100);
-            document.getElementById(displayId).textContent = `${value} (${percentage}%)`;
+            document.getElementById(displayId).textContent = percentage + "%";
         }
-
-        {% if stress_level %}
-        document.addEventListener("DOMContentLoaded", function () {
-            showModal('resultModal');
-        });
-        {% endif %}
     </script>
 </body>
 
