@@ -12,7 +12,6 @@
             output.innerHTML = `${slider.value} (${Math.round((slider.value - slider.min) / (slider.max - slider.min) * 100)}%)`;
         }
 
-        // Function to trigger the modal when the form is submitted
         function showResultModal(stressLevel, advice, emoticon) {
             const modalTitle = document.getElementById('modalTitle');
             const modalBody = document.getElementById('modalBody');
@@ -21,8 +20,7 @@
             modalTitle.textContent = `Tingkat Stres Anda: ${stressLevel}`;
             modalBody.textContent = advice;
             modalEmoticon.textContent = emoticon;
-            
-            // Show the modal
+
             $('#resultModal').modal('show');
         }
     </script>
@@ -45,6 +43,13 @@
     </div>
 
     {% if stress_level %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            showResultModal("{{ stress_level }}", "{{ advice }}", "{{ emoticon }}");
+        });
+    </script>
+    {% endif %}
+
     <!-- Modal Popup -->
     <div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -66,12 +71,6 @@
         </div>
     </div>
 
-    <script>
-        // Trigger modal after form submission and prediction
-        showResultModal("{{ stress_level }}", "{{ advice }}", "{{ emoticon }}");
-    </script>
-    {% endif %}
-    
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

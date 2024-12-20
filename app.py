@@ -1,10 +1,11 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for, session
 import numpy as np
 import tensorflow as tf
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key'  # Ganti dengan secret key Anda
 
 # Fungsi untuk memuat model
 def load_new_model():
@@ -62,15 +63,11 @@ def index():
     min_max_values = get_min_max_values(df)
     questions = get_stress_questions()
 
-    stress_level = None
-    advice = None
-    emoticon = None
-
     if request.method == "POST":
         # Ambil input dari form
         user_input = []
         for col in min_max_values:
-            user_input.append(float(request.form[col]))
+            user_input.append(float(request.form.get(col, 0)))  # Default to 0 if not found
 
         # Memuat model dan scaler
         model = load_new_model()
@@ -80,6 +77,10 @@ def index():
         predicted_class = predict_stress(model, scaler, user_input)
 
         # Tentukan tingkat stres
+        stress_level = None
+        emoticon = None
+        advice = None
+
         if predicted_class == 0:
             stress_level = "Ringan"
             emoticon = "😊"
@@ -97,6 +98,18 @@ def index():
             2: "Cari dukungan profesional seperti konsultan atau terapis. Jangan ragu minta bantuan orang terdekat."
         }
         advice = advices[predicted_class]
+
+        # Simpan hasil prediksi di session
+        session['stress_level'] = stress_level
+        session['advice'] = advice
+        session['emoticon'] = emoticon
+
+        return redirect(url_for('index'))
+
+    # Ambil data dari session
+    stress_level = session.pop('stress_level', None)
+    advice = session.pop('advice', None)
+    emoticon = session.pop('emoticon', None)
 
     return render_template('index.html', stress_level=stress_level, advice=advice, emoticon=emoticon,
                            min_max_values=min_max_values, questions=questions)
