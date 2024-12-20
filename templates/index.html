@@ -1,196 +1,79 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prediksi Tingkat Stres</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
-
-<body class="bg-light">
-    <!-- Popup Input Nama -->
-    <div id="nameModal" class="modal">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content shadow">
-                <span class="close" onclick="closeModal('nameModal')">&times;</span>
-                <div class="modal-header">
-                    <h4 class="modal-title">Masukkan Nama Anda</h4>
-                </div>
-                <div class="modal-body">
-                    <form id="nameForm">
-                        <div class="form-group">
-                            <label for="userName">Nama:</label>
-                            <input type="text" class="form-control" id="userName" name="userName" required>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-success" onclick="submitName()">Lanjutkan</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Tombol Mulai -->
-    <div class="container d-flex justify-content-center align-items-center vh-100">
-        <button class="btn btn-success btn-lg start-button" onclick="startQuestions()">Mulai Pertanyaan</button>
-    </div>
-
-    <!-- Popups untuk Pertanyaan -->
-    {% for factor, min_max in min_max_values.items() %}
-    <div id="modal_{{ loop.index }}" class="modal">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content shadow">
-                <span class="close" onclick="closeModal('modal_{{ loop.index }}')">&times;</span>
-                <div class="modal-header">
-                    <h4 class="modal-title">{{ get_question_for_factor(factor, min_max[0], min_max[1]) }}</h4>
-                </div>
-                <div class="modal-body">
-                    {% if factor == 'mental_health_history' %}
-                    <div class="form-check">
-                        <input type="radio" id="{{ factor }}_0" name="{{ factor }}" value="0" class="form-check-input"
-                            required>
-                        <label for="{{ factor }}_0" class="form-check-label">Tidak</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="radio" id="{{ factor }}_1" name="{{ factor }}" value="1" class="form-check-input"
-                            required>
-                        <label for="{{ factor }}_1" class="form-check-label">Ya</label>
-                    </div>
-                    {% else %}
-                    <p class="description-text">
-                        {{ get_description_for_factor(factor) }}
-                    </p>
-                    <div class="slider-container d-flex align-items-center">
-                        <input type="range" class="form-range flex-grow-1 slider" id="{{ factor }}" name="{{ factor }}"
-                            min="{{ min_max[0] }}" max="{{ min_max[1] }}" value="{{ min_max[0] }}"
-                            oninput="updateSliderValue(this, '{{ factor }}_percentage', {{ min_max[0] }}, {{ min_max[1] }})"
-                            required>
-                        <div class="slider-percentage ms-3" id="{{ factor }}_percentage">
-                            {{ min_max[0] }}
-                        </div>
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="modal-footer">
-                    {% if not loop.last %}
-                    <button class="btn btn-secondary" onclick="goToPrevious({{ loop.index }})">Sebelumnya</button>
-                    <button class="btn btn-primary" onclick="goToNext({{ loop.index }})">Selanjutnya</button>
-                    {% else %}
-                    <button class="btn btn-secondary" onclick="goToPrevious({{ loop.index }})">Sebelumnya</button>
-                    <button class="btn btn-success" onclick="submitForm()">Prediksi</button>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endfor %}
-
-    <!-- Popup Hasil -->
-    <div id="resultModal" class="modal">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content shadow">
-                <span class="close" onclick="closeModal('resultModal')">&times;</span>
-                <div class="modal-header bg-success text-white">
-                    <h3 class="modal-title text-center w-100" id="resultTitle">Haiii, {{ userName }}</h3>
-                </div>
-                <div class="modal-body text-center">
-                    <span class="emoticon">{{ emoticon }}</span>
-                    {% if stress_level %}
-                    <h4 class="mb-3">Tingkat Stres Anda:
-                        <span class="font-weight-bold">{{ stress_level }}</span>
-                    </h4>
-                    <p>{{ advice }}</p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <form id="stressForm" method="POST" style="display: none;">
-        {% for factor, min_max in min_max_values.items() %}
-        <input type="hidden" id="hidden_{{ factor }}" name="{{ factor }}">
-        {% endfor %}
-    </form>
-
     <script>
-        let currentIndex = 1;
-        let userName = "";  // Variabel untuk menyimpan nama pengguna
-
-        // Fungsi untuk memulai pertanyaan
-        function startQuestions() {
-            showModal('nameModal');  // Tampilkan popup untuk input nama
+        function updateSliderValue(sliderId, outputId) {
+            const slider = document.getElementById(sliderId);
+            const output = document.getElementById(outputId);
+            output.innerHTML = `${slider.value} (${Math.round((slider.value - slider.min) / (slider.max - slider.min) * 100)}%)`;
         }
 
-        // Fungsi untuk menangani input nama pengguna
-        function submitName() {
-            userName = document.getElementById('userName').value;
-            if (userName) {
-                closeModal('nameModal');
-                showModal(`modal_${currentIndex}`);
-                // Menampilkan nama di hasil prediksi
-                document.getElementById('resultTitle').textContent = `Haiii, ${userName}`;
-            } else {
-                alert("Nama tidak boleh kosong");
-            }
-        }
-
-        // Fungsi untuk menampilkan modal
-        function showModal(modalId) {
-            document.getElementById(modalId).style.display = "block";
-        }
-
-        // Fungsi untuk menutup modal
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = "none";
-        }
-
-        // Fungsi untuk pergi ke modal sebelumnya
-        function goToPrevious(index) {
-            if (index > 1) {
-                closeModal(`modal_${index}`);
-                currentIndex = index - 1;
-                showModal(`modal_${currentIndex}`);
-            }
-        }
-
-        // Fungsi untuk pergi ke modal selanjutnya
-        function goToNext(index) {
-            const currentModal = document.getElementById(`modal_${index}`);
-            const inputField = currentModal.querySelector('input[name]');
-            if (inputField) {
-                const hiddenInput = document.getElementById(`hidden_${inputField.name}`);
-                hiddenInput.value = inputField.value;
-            }
-
-            closeModal(`modal_${index}`);
-            currentIndex = index + 1;
-            showModal(`modal_${currentIndex}`);
-        }
-
-        // Fungsi untuk submit form dan prediksi
-        function submitForm() {
-            const currentModal = document.getElementById(`modal_${currentIndex}`);
-            const inputField = currentModal.querySelector('input[name]');
-            if (inputField) {
-                const hiddenInput = document.getElementById(`hidden_${inputField.name}`);
-                hiddenInput.value = inputField.value;
-            }
-
-            // Jangan menutup modal di sini, biarkan modal tetap terbuka untuk prediksi
-            // Melanjutkan ke modal hasil setelah prediksi
-            showModal('resultModal');
-        }
-
-        // Fungsi untuk update nilai slider
-        function updateSliderValue(slider, displayId, min, max) {
-            const value = parseFloat(slider.value);
-            const percentage = Math.round(((value - min) / (max - min)) * 100);
-            document.getElementById(displayId).textContent = percentage + "%";
+        // Function to trigger the modal when the form is submitted
+        function showResultModal(stressLevel, advice, emoticon) {
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            const modalEmoticon = document.getElementById('modalEmoticon');
+            
+            modalTitle.textContent = `Tingkat Stres Anda: ${stressLevel}`;
+            modalBody.textContent = advice;
+            modalEmoticon.textContent = emoticon;
+            
+            // Show the modal
+            $('#resultModal').modal('show');
         }
     </script>
-</body>
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h1 class="text-center">Prediksi Tingkat Stres</h1>
+        <form method="POST" action="/" class="mt-4">
+            {% for factor, min_max in min_max_values.items() %}
+            <div class="form-group">
+                <label for="{{ factor }}">{{ questions[factor] }}</label>
+                <input type="range" id="{{ factor }}" name="{{ factor }}" class="form-control" 
+                       min="{{ min_max[0] }}" max="{{ min_max[1] }}" value="{{ min_max[0] }}" 
+                       oninput="updateSliderValue('{{ factor }}', '{{ factor }}_output')">
+                <div class="mt-2">Nilai: <span id="{{ factor }}_output">{{ min_max[0] }} (0%)</span></div>
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary mt-3">Prediksi</button>
+        </form>
+    </div>
 
+    {% if stress_level %}
+    <!-- Modal Popup -->
+    <div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <p id="modalBody"></p>
+                    <div style="font-size: 2rem;" id="modalEmoticon"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Trigger modal after form submission and prediction
+        showResultModal("{{ stress_level }}", "{{ advice }}", "{{ emoticon }}");
+    </script>
+    {% endif %}
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 </html>
