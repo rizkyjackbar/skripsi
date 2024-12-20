@@ -27,14 +27,10 @@ def predict_stress(model, scaler, user_input):
     predicted_class = np.argmax(prediction, axis=1)
     return predicted_class[0]
 
-# Fungsi untuk mendapatkan min-max dari dataset
-def get_min_max_values(df):
-    min_max_values = {col: (df[col].min(), df[col].max()) for col in df.columns if col != 'stress_level'}
-    return min_max_values
-
-# Pertanyaan terkait setiap faktor stres
-def get_stress_questions():
-    return {
+# Fungsi untuk mendapatkan pertanyaan dan min-max
+def get_stress_questions_and_min_max():
+    df = pd.read_csv('StressLevelDataset.csv')
+    questions = {
         'anxiety_level': "Seberapa cemas Anda merasa akhir-akhir ini?",
         'self_esteem': "Bagaimana Anda menilai harga diri Anda saat ini?",
         'mental_health_history': "Apakah Anda memiliki riwayat masalah kesehatan mental?",
@@ -56,63 +52,82 @@ def get_stress_questions():
         'extracurricular_activities': "Seberapa banyak kegiatan ekstrakurikuler atau kegiatan di luar sekolah/kerja yang Anda ikuti?",
         'bullying': "Apakah Anda mengalami perundungan atau bullying di sekolah atau tempat kerja?"
     }
+    min_max_values = {col: (df[col].min(), df[col].max()) for col in df.columns if col != 'stress_level'}
+    return questions, min_max_values
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    df = pd.read_csv('StressLevelDataset.csv')
-    min_max_values = get_min_max_values(df)
-    questions = get_stress_questions()
+    if request.method == "POST":
+        if 'start' in request.form:
+            questions, _ = get_stress_questions_and_min_max()
+            session['current_index'] = 0
+            session['user_input'] = [None] * len(questions)  # Inisialisasi dengan ukuran sesuai jumlah pertanyaan
+            return redirect(url_for('questions'))
+
+    return render_template('index.html')
+
+@app.route("/questions", methods=["GET", "POST"])
+def questions():
+    questions, min_max_values = get_stress_questions_and_min_max()
+    question_keys = list(questions.keys())
+    current_index = session.get('current_index', 0)
+    user_input = session.get('user_input', [None] * len(question_keys))
+
+    # Validasi current_index agar tidak melampaui batas
+    if current_index < 0 or current_index >= len(question_keys):
+        return redirect(url_for('index'))  # Jika di luar batas, kembalikan ke halaman awal
 
     if request.method == "POST":
-        # Ambil input dari form
-        user_input = []
-        for col in min_max_values:
-            user_input.append(float(request.form.get(col, 0)))  # Default to 0 if not found
+        if 'next' in request.form:
+            value = request.form.get('answer', None)
+            if value is not None:
+                user_input[current_index] = float(value)
+            current_index += 1
+        elif 'back' in request.form:
+            current_index -= 1
+        elif 'predict' in request.form:
+            value = request.form.get('answer', None)
+            if value is not None:
+                user_input[current_index] = float(value)
 
-        # Memuat model dan scaler
-        model = load_new_model()
-        scaler = load_dataset_and_scaler()
+            # Prediksi tingkat stres
+            model = load_new_model()
+            scaler = load_dataset_and_scaler()
+            predicted_class = predict_stress(model, scaler, user_input)
 
-        # Prediksi tingkat stres
-        predicted_class = predict_stress(model, scaler, user_input)
+            if predicted_class == 0:
+                stress_level = "Ringan"
+                emoticon = "😊"
+                advice = "Kayaknya kamu cuma butuh istirahat sejenak. Coba luangkan waktu buat hal yang bikin rileks."
+            elif predicted_class == 1:
+                stress_level = "Sedang"
+                emoticon = "😐"
+                advice = "Mungkin kamu bisa coba meditasi, relaksasi, dan ngobrol sama teman atau konselor."
+            else:
+                stress_level = "Berat"
+                emoticon = "😟"
+                advice = "Cari dukungan profesional seperti konsultan atau terapis. Jangan ragu minta bantuan orang terdekat."
 
-        # Tentukan tingkat stres
-        stress_level = None
-        emoticon = None
-        advice = None
+            return render_template('result.html', stress_level=stress_level, advice=advice, emoticon=emoticon)
 
-        if predicted_class == 0:
-            stress_level = "Ringan"
-            emoticon = "😊"
-        elif predicted_class == 1:
-            stress_level = "Sedang"
-            emoticon = "😐"
-        else:
-            stress_level = "Berat"
-            emoticon = "😟"
+        session['current_index'] = current_index
+        session['user_input'] = user_input
 
-        # Saran berdasarkan tingkat stres
-        advices = {
-            0: "Kayaknya kamu cuma butuh istirahat sejenak. Coba luangkan waktu buat hal yang bikin rileks.",
-            1: "Mungkin kamu bisa coba meditasi, relaksasi, dan ngobrol sama teman atau konselor.",
-            2: "Cari dukungan profesional seperti konsultan atau terapis. Jangan ragu minta bantuan orang terdekat."
-        }
-        advice = advices[predicted_class]
+    current_key = question_keys[current_index]
+    current_value = user_input[current_index] if user_input[current_index] is not None else min_max_values[current_key][0]
 
-        # Simpan hasil prediksi di session
-        session['stress_level'] = stress_level
-        session['advice'] = advice
-        session['emoticon'] = emoticon
-
-        return redirect(url_for('index'))
-
-    # Ambil data dari session
-    stress_level = session.pop('stress_level', None)
-    advice = session.pop('advice', None)
-    emoticon = session.pop('emoticon', None)
-
-    return render_template('index.html', stress_level=stress_level, advice=advice, emoticon=emoticon,
-                           min_max_values=min_max_values, questions=questions)
+    # Pass `current_index` and `total_questions` to template
+    return render_template(
+        'questions.html',
+        question=questions[current_key],
+        min_value=min_max_values[current_key][0],
+        max_value=min_max_values[current_key][1],
+        current_value=current_value,
+        is_first=current_index == 0,
+        is_last=current_index == len(question_keys) - 1,
+        current_index=current_index,
+        total_questions=len(question_keys)
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)

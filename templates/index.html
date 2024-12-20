@@ -1,78 +1,35 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prediksi Tingkat Stres</title>
+    <title>StressLess.</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <script>
-        function updateSliderValue(sliderId, outputId) {
-            const slider = document.getElementById(sliderId);
-            const output = document.getElementById(outputId);
-            output.innerHTML = `${slider.value} (${Math.round((slider.value - slider.min) / (slider.max - slider.min) * 100)}%)`;
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
 
-        function showResultModal(stressLevel, advice, emoticon) {
-            const modalTitle = document.getElementById('modalTitle');
-            const modalBody = document.getElementById('modalBody');
-            const modalEmoticon = document.getElementById('modalEmoticon');
-            
-            modalTitle.textContent = `Tingkat Stres Anda: ${stressLevel}`;
-            modalBody.textContent = advice;
-            modalEmoticon.textContent = emoticon;
-
-            $('#resultModal').modal('show');
+        .container {
+            max-width: 600px;
         }
-    </script>
+    </style>
 </head>
+
 <body class="bg-light">
-    <div class="container mt-5">
-        <h1 class="text-center">Prediksi Tingkat Stres</h1>
-        <form method="POST" action="/" class="mt-4">
-            {% for factor, min_max in min_max_values.items() %}
-            <div class="form-group">
-                <label for="{{ factor }}">{{ questions[factor] }}</label>
-                <input type="range" id="{{ factor }}" name="{{ factor }}" class="form-control" 
-                       min="{{ min_max[0] }}" max="{{ min_max[1] }}" value="{{ min_max[0] }}" 
-                       oninput="updateSliderValue('{{ factor }}', '{{ factor }}_output')">
-                <div class="mt-2">Nilai: <span id="{{ factor }}_output">{{ min_max[0] }} (0%)</span></div>
-            </div>
-            {% endfor %}
-            <button type="submit" class="btn btn-primary mt-3">Prediksi</button>
+    <div class="container text-center">
+        <h1 class="display-4 font-weight-bold">StressLess.</h1>
+        <p>Kesehatan mental yang baik sangat penting untuk menjalani hidup yang bahagia dan produktif. Yuk, mulai
+            perjalanan Anda untuk mengenal dan mengelola stres dengan lebih baik!</p>
+        <form method="POST" class="mt-4">
+            <button type="submit" name="start" class="btn btn-primary btn-lg">Mulai</button>
         </form>
     </div>
-
-    {% if stress_level %}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            showResultModal("{{ stress_level }}", "{{ advice }}", "{{ emoticon }}");
-        });
-    </script>
-    {% endif %}
-
-    <!-- Modal Popup -->
-    <div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitle"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body text-center">
-                    <p id="modalBody"></p>
-                    <div style="font-size: 2rem;" id="modalEmoticon"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>
