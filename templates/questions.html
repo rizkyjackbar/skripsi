@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StressLess.</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            overflow: hidden;
+        }
+
+        .modal-content {
+            overflow: hidden;
+        }
+
+        #percentage-display {
+            text-align: right;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .d-flex .btn {
+            margin: 0 3px;
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+    <div class="container mt-5">
+        <!-- Trigger modal automatically -->
+        <script>
+            $(document).ready(function () {
+                $('#questionModal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
+
+                // Add event listener for modal close button
+                $(".modal-close-btn").click(function () {
+                    $('#continueModal').modal('show');
+                });
+            });
+        </script>
+
+        <!-- Modal for Questions -->
+        <div class="modal fade" id="questionModal" tabindex="-1" aria-labelledby="questionModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="questionModalLabel">Pertanyaan {{ current_index + 1 }}</h5>
+                        <button type="button" class="close modal-close-btn" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h4 class="text-center">{{ question }}</h4>
+                        <form method="POST" class="mt-4">
+                            {% if current_index == 2 %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="answer" id="option0" value="0">
+                                <label class="form-check-label" for="option0">
+                                    Tidak
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="answer" id="option1" value="1">
+                                <label class="form-check-label" for="option1">
+                                    Iya
+                                </label>
+                            </div>
+                            {% else %}
+                            <div id="percentage-display">0% (<span id="value-display">{{ current_value }}</span>)</div>
+                            <input type="range" name="answer" class="form-control-range" min="{{ min_value }}"
+                                max="{{ max_value }}" value="{{ current_value }}">
+                            <script>
+                                document.querySelector('input[name="answer"]').addEventListener('input', function () {
+                                    const min = parseFloat(this.min);
+                                    const max = parseFloat(this.max);
+                                    const value = parseFloat(this.value);
+                                    const percentage = Math.round(((value - min) / (max - min)) * 100);
+                                    document.getElementById('percentage-display').textContent = percentage + '% (' + value + ')';
+                                    document.getElementById('value-display').textContent = value;
+                                });
+                            </script>
+                            {% endif %}
+                            <div class="d-flex justify-content-end mt-4">
+                                {% if not is_first %}
+                                <button type="submit" name="back" class="btn btn-secondary">Back</button>
+                                {% endif %}
+                                {% if is_last %}
+                                <button type="submit" name="predict" class="btn btn-primary">Prediksi</button>
+                                {% else %}
+                                <button type="submit" name="next" class="btn btn-primary">Next</button>
+                                {% endif %}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for Continue Confirmation -->
+        <div class="modal fade" id="continueModal" tabindex="-1" aria-labelledby="continueModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body text-center">
+                        <p>Apakah Anda ingin melanjutkan prediksi tingkat stres Anda atau kembali ke halaman awal?</p>
+                        <div class="modal-footer-centered">
+                            <a href="/" class="btn btn-danger">Akhiri</a>
+                            <button type="button" class="btn btn-primary"
+                                onclick="$('#questionModal').modal('show'); $('#continueModal').modal('hide');">Lanjutkan</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
