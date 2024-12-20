@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StressLess.</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f8f9fa;
+    }
+</style>
+
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card text-center shadow-lg">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Hasil Prediksi</h4>
+                    </div>
+                    <div class="card-body">
+                        <h1 class="card-title mb-4">{{ stress_level }}</h1>
+                        <div style="font-size: 4rem;">{{ emoticon }}</div>
+                        <p class="card-text mt-4">{{ advice }}</p>
+                        <a href="/" class="btn btn-primary mt-4">Mulai Lagi</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
