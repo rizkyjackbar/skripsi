@@ -1,0 +1,198 @@
+/* Palette */
+:root {
+    --primary-color: #2E5077;
+    --secondary-color: #4DA1A9;
+    --tertiary-color: #79D7BE;
+    --background-color: #F6F4F0;
+    --slider-thumb-color: #4DA1A9;
+    --slider-track-color: #2E5077;
+    --slider-bg-color: #79D7BE;
+}
+
+/* General Styles */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: var(--background-color);
+}
+
+.bg-custom-light {
+    background-color: var(--background-color) !important;
+}
+
+.text-primary-custom {
+    color: var(--primary-color) !important;
+}
+
+.text-secondary-custom {
+    color: var(--secondary-color) !important;
+}
+
+.container {
+    max-width: 600px;
+    margin: 12px auto;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-secondary {
+    background-color: var(--tertiary-color);
+    border-color: var(--tertiary-color);
+    color: #ffffff;
+}
+
+.btn-secondary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+/* Card Styling */
+.card-header {
+    background-color: var(--primary-color) !important;
+    color: #ffffff !important;
+}
+
+.card-title {
+    color: var(--primary-color) !important;
+}
+
+.card-text {
+    color: var(--secondary-color) !important;
+}
+
+/* Modal Styling */
+.modal-content {
+    background-color: var(--background-color);
+    border: 2px solid var(--primary-color);
+    border-radius: 10px;
+    margin-top: 12px;
+}
+
+.modal-header {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    border-bottom: 2px solid var(--secondary-color);
+}
+
+/* Mengatur tombol 'X' di modal */
+.modal-header .close {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    color: var(--tertiary-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* Hover effect tombol 'X' */
+.modal-header .close:hover {
+    color: var(--secondary-color);
+}
+
+.modal-header .close:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+
+.modal-body h4 {
+    color: var(--primary-color);
+}
+
+.modal-footer-centered .btn-primary {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.modal-footer-centered .btn-primary:hover {
+    background-color: var(--tertiary-color);
+    border-color: var(--tertiary-color);
+}
+
+.modal-footer-centered .btn-danger {
+    background-color: var(--tertiary-color);
+    border-color: var(--tertiary-color);
+}
+
+.modal-footer-centered .btn-danger:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Slider Styling */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 10px;
+    background: var(--slider-bg-color);
+    border-radius: 5px;
+    outline: none;
+    opacity: 0.9;
+    transition: opacity 0.2s;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--slider-thumb-color);
+    cursor: pointer;
+    border: 2px solid var(--slider-track-color);
+}
+
+input[type="range"]::-moz-range-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--slider-thumb-color);
+    cursor: pointer;
+    border: 2px solid var(--slider-track-color);
+}
+
+input[type="range"]:focus::-webkit-slider-thumb {
+    box-shadow: 0 0 5px var(--slider-thumb-color);
+}
+
+input[type="range"]:focus::-moz-range-thumb {
+    box-shadow: 0 0 5px var(--slider-thumb-color);
+}
+
+/* Footer Styling */
+.footer-custom {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    padding: 10px 0;
+    font-size: 1rem;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.footer-custom .author {
+    font-weight: bold;
+    color: var(--tertiary-color);
+    text-decoration: none;
+}
+
+.footer-custom .author:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}

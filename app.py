@@ -61,7 +61,7 @@ def index():
         if 'start' in request.form:
             questions, _ = get_stress_questions_and_min_max()
             session['current_index'] = 0
-            session['user_input'] = [None] * len(questions)  # Inisialisasi dengan ukuran sesuai jumlah pertanyaan
+            session['user_input'] = [None] * len(questions)
             return redirect(url_for('questions'))
 
     return render_template('index.html')
@@ -75,7 +75,7 @@ def questions():
 
     # Validasi current_index agar tidak melampaui batas
     if current_index < 0 or current_index >= len(question_keys):
-        return redirect(url_for('index'))  # Jika di luar batas, kembalikan ke halaman awal
+        return redirect(url_for('index'))
 
     if request.method == "POST":
         if 'next' in request.form:
@@ -116,7 +116,6 @@ def questions():
     current_key = question_keys[current_index]
     current_value = user_input[current_index] if user_input[current_index] is not None else min_max_values[current_key][0]
 
-    # Pass `current_index` and `total_questions` to template
     return render_template(
         'questions.html',
         question=questions[current_key],

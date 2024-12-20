@@ -6,30 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StressLess.</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/css/style.css" rel="stylesheet">
 </head>
-<style>
-    body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-        background-color: #f8f9fa;
-    }
-</style>
 
-<body class="bg-light">
-    <div class="container my-5">
+<body class="bg-custom-light">
+    <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-md-11">
                 <div class="card text-center shadow-lg">
-                    <div class="card-header bg-primary text-white">
+                    <div class="card-header bg-primary-custom text-white">
                         <h4 class="mb-0">Hasil Prediksi</h4>
                     </div>
                     <div class="card-body">
-                        <h1 class="card-title mb-1">Hasil tingkat Stres anda adalah <b>{{ stress_level }} </b>nih</h1>
-                        <div style="font-size: 5rem;">{{ emoticon }}</div>
-                        <p class="card-text mt-2">{{ advice }}</p>
+                        <h1 class="card-title mb-1 text-primary-custom">
+                            Hasil tingkat Stres anda adalah <b>{{ stress_level }} </b>nih
+                        </h1>
+                        <div style="font-size: 5rem;" class="text-secondary-custom">{{ emoticon }}</div>
+                        <p class="card-text mt-2 text-secondary-custom">{{ advice }}</p>
                         <a href="/" class="btn btn-primary my-2">Mulai Lagi</a>
                     </div>
                 </div>
@@ -37,5 +30,10 @@
         </div>
     </div>
 </body>
+
+<footer class="footer-custom text-center">
+    made with ❤️ by <a href="https://rizkyjackbar.com" class="author" target="_blank"
+        rel="noopener noreferrer">rizkyjackbar</a>
+</footer>
 
 </html>

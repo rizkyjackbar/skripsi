@@ -9,6 +9,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link href="../static/css/style.css" rel="stylesheet">
     <style>
         body {
             overflow: hidden;
@@ -40,7 +41,6 @@
                     keyboard: false
                 });
 
-                // Add event listener for modal close button
                 $(".modal-close-btn").click(function () {
                     $('#continueModal').modal('show');
                 });
@@ -91,12 +91,12 @@
                             {% endif %}
                             <div class="d-flex justify-content-end mt-4">
                                 {% if not is_first %}
-                                <button type="submit" name="back" class="btn btn-secondary">Back</button>
+                                <button type="submit" name="back" class="btn btn-secondary">Kembali</button>
                                 {% endif %}
                                 {% if is_last %}
                                 <button type="submit" name="predict" class="btn btn-primary">Prediksi</button>
                                 {% else %}
-                                <button type="submit" name="next" class="btn btn-primary">Next</button>
+                                <button type="submit" name="next" class="btn btn-primary">Lanjut</button>
                                 {% endif %}
                             </div>
                         </form>
@@ -105,10 +105,9 @@
             </div>
         </div>
 
-        <!-- Modal for Continue Confirmation -->
         <div class="modal fade" id="continueModal" tabindex="-1" aria-labelledby="continueModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-sm"> <!-- Tambahkan 'modal-sm' -->
+            <div class="modal-dialog modal-dialog-centered modal-sm">
                 <div class="modal-content">
                     <div class="modal-body text-center">
                         <p>Anda yakin ingin mengakhiri sesi ini prediksi ?</p>
@@ -124,5 +123,10 @@
 
     </div>
 </body>
+
+<footer class="footer-custom text-center">
+    made with ❤️ by <a href="https://rizkyjackbar.com" class="author" target="_blank"
+        rel="noopener noreferrer">rizkyjackbar</a>
+</footer>
 
 </html>
