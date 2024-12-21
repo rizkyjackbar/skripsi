@@ -4,13 +4,23 @@ import tensorflow as tf
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
 import os
+from dotenv import load_dotenv
 
+# Memuat variabel lingkungan dari file .env
+load_dotenv()
+
+# Membuat aplikasi Flask
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Ganti dengan secret key Anda
+
+# Menggunakan SECRET_KEY yang dimuat dari .env
+app.secret_key = os.getenv('SECRET_KEY')
+
+# Cek apakah secret_key berhasil dimuat
+print("Secret Key:", app.secret_key)  # Optional, untuk memverifikasi secret_key
 
 # Fungsi untuk memuat model
 def load_new_model():
-    model_path = os.path.join(os.getcwd(), 'model', 'stress_level_model_v2.h5')  # Menggunakan os.path.join
+    model_path = os.path.join(os.getcwd(), 'model', 'stress_level_model_v2.h5')
     try:
         model = tf.keras.models.load_model(model_path)
         return model
@@ -21,10 +31,10 @@ def load_new_model():
 # Fungsi untuk memuat dataset dan scaler
 def load_dataset_and_scaler():
     try:
-        dataset_path = os.path.join(os.getcwd(), 'StressLevelDataset.csv')  # Memastikan path ke dataset benar
+        dataset_path = os.path.join(os.getcwd(), 'StressLevelDataset.csv')
         df = pd.read_csv(dataset_path)
         scaler = StandardScaler()
-        df_scaled = scaler.fit_transform(df.drop(columns=['stress_level']))  # Menyesuaikan dengan kolom selain 'stress_level'
+        df_scaled = scaler.fit_transform(df.drop(columns=['stress_level']))
         return df, scaler
     except FileNotFoundError:
         print("File dataset tidak ditemukan!")
@@ -33,7 +43,7 @@ def load_dataset_and_scaler():
 # Fungsi untuk memprediksi tingkat stres
 def predict_stress(model, scaler, user_input):
     if model is None or scaler is None:
-        return -1  # Jika model atau scaler gagal dimuat, return kelas -1 sebagai error
+        return -1 
     user_input_scaled = scaler.transform([user_input])
     prediction = model.predict(user_input_scaled)
     predicted_class = np.argmax(prediction, axis=1)
