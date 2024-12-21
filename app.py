@@ -5,6 +5,7 @@ from sklearn.preprocessing import StandardScaler
 import pandas as pd
 import os
 from dotenv import load_dotenv
+print("dotenv imported successfully")
 
 # Memuat variabel lingkungan dari file .env
 load_dotenv()
