@@ -3,25 +3,37 @@ import numpy as np
 import tensorflow as tf
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
+import os
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Ganti dengan secret key Anda
 
 # Fungsi untuk memuat model
 def load_new_model():
-    model = tf.keras.models.load_model('model/stress_level_model_v2.h5')
-    return model
+    model_path = os.path.join(os.getcwd(), 'model', 'stress_level_model_v2.h5')  # Menggunakan os.path.join
+    try:
+        model = tf.keras.models.load_model(model_path)
+        return model
+    except Exception as e:
+        print(f"Error loading model: {e}")
+        return None  # Kembalikan None jika gagal
 
 # Fungsi untuk memuat dataset dan scaler
 def load_dataset_and_scaler():
-    df = pd.read_csv('StressLevelDataset.csv')
-    scaler = StandardScaler()
-    X = df.drop(columns=['stress_level'])
-    scaler.fit(X)
-    return scaler
+    try:
+        dataset_path = os.path.join(os.getcwd(), 'StressLevelDataset.csv')  # Memastikan path ke dataset benar
+        df = pd.read_csv(dataset_path)
+        scaler = StandardScaler()
+        df_scaled = scaler.fit_transform(df.drop(columns=['stress_level']))  # Menyesuaikan dengan kolom selain 'stress_level'
+        return df, scaler
+    except FileNotFoundError:
+        print("File dataset tidak ditemukan!")
+        return None, None
 
 # Fungsi untuk memprediksi tingkat stres
 def predict_stress(model, scaler, user_input):
+    if model is None or scaler is None:
+        return -1  # Jika model atau scaler gagal dimuat, return kelas -1 sebagai error
     user_input_scaled = scaler.transform([user_input])
     prediction = model.predict(user_input_scaled)
     predicted_class = np.argmax(prediction, axis=1)
@@ -92,14 +104,17 @@ def questions():
 
             # Prediksi tingkat stres
             model = load_new_model()
-            scaler = load_dataset_and_scaler()
+            df, scaler = load_dataset_and_scaler()
+            
+            if model is None or df is None or scaler is None:
+                return render_template('result.html', stress_level="Error", advice="Terjadi kesalahan saat memuat data atau model.", emoticon="😞")
+
             predicted_class = predict_stress(model, scaler, user_input)
 
             if predicted_class == 0:
                 stress_level = "Ringan"
                 emoticon = "😊"
                 advice = ("Kamu cuma perlu istirahat sebentar. Coba santai sejenak, dengar musik favorit, atau jalan-jalan kecil. Kalau ada waktu, kamu juga bisa lakukan hobi yang bikin kamu happy, seperti baca buku, nonton film lucu atau berkumpul sama teman. Jangan lupa minum cukup air dan makan makanan yang sehat ya. Hal kecil ini bisa bikin kamu merasa lebih segar dan siap menghadapi aktivitas lagi.")
-
             elif predicted_class == 1:
                 stress_level = "Sedang"
                 emoticon = "😐"

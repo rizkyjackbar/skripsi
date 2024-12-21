@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StressLess.</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../static/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body class="bg-custom-light">
@@ -19,7 +19,7 @@
                     </div>
                     <div class="card-body">
                         <h1 class="card-title mb-1 text-primary-custom">
-                            Hasil tingkat Stres anda adalah <b>{{ stress_level }} </b>nih
+                            Hasil tingkat Stres anda adalah <b>{{ stress_level }} </b>
                         </h1>
                         <div style="font-size: 5rem;" class="text-secondary-custom">{{ emoticon }}</div>
                         <p class="card-text mt-2 text-secondary-custom">{{ advice }}</p>
