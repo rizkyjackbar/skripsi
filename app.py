@@ -31,26 +31,26 @@ def predict_stress(model, scaler, user_input):
 def get_stress_questions_and_min_max():
     df = pd.read_csv('StressLevelDataset.csv')
     questions = {
-        'anxiety_level': "Seberapa cemas Anda merasa akhir-akhir ini?",
-        'self_esteem': "Bagaimana Anda menilai harga diri Anda saat ini?",
-        'mental_health_history': "Apakah Anda memiliki riwayat masalah kesehatan mental?",
-        'depression': "Seberapa sering Anda merasa tertekan atau sedih dalam beberapa minggu terakhir?",
-        'headache': "Seberapa sering Anda mengalami sakit kepala atau migrain?",
-        'blood_pressure': "Bagaimana kondisi tekanan darah Anda akhir-akhir ini?",
-        'sleep_quality': "Seberapa baik kualitas tidur Anda dalam beberapa minggu terakhir?",
-        'breathing_problem': "Apakah Anda mengalami masalah pernapasan atau sesak napas?",
-        'noise_level': "Seberapa tinggi tingkat kebisingan di lingkungan Anda (rumah, tempat kerja, sekolah)?",
-        'living_conditions': "Bagaimana kondisi tempat tinggal Anda saat ini?",
-        'safety': "Seberapa aman Anda merasa di lingkungan sekitar Anda?",
-        'basic_needs': "Apakah kebutuhan dasar Anda (makanan, tempat tinggal, pakaian) tercukupi dengan baik?",
-        'academic_performance': "Bagaimana Anda menilai performa akademis Anda?",
-        'study_load': "Seberapa banyak beban studi atau pekerjaan akademis yang Anda rasakan saat ini?",
-        'teacher_student_relationship': "Bagaimana hubungan Anda dengan guru atau pengajar Anda?",
-        'future_career_concerns': "Seberapa khawatir Anda mengenai karier dan masa depan Anda?",
-        'social_support': "Seberapa banyak dukungan yang Anda rasakan dari teman atau keluarga?",
-        'peer_pressure': "Seberapa besar tekanan yang Anda rasakan dari teman sebaya atau lingkungan sosial Anda?",
-        'extracurricular_activities': "Seberapa banyak kegiatan ekstrakurikuler atau kegiatan di luar sekolah/kerja yang Anda ikuti?",
-        'bullying': "Apakah Anda mengalami perundungan atau bullying di sekolah atau tempat kerja?"
+        'anxiety_level': "Akhir-akhir ini, sering nggak ngerasa cemas atau gelisah?",
+        'self_esteem': "Gimana nih, kamu lagi pede sama diri sendiri atau nggak?",
+        'mental_health_history': "Pernah punya masalah kesehatan mental sebelumnya?",
+        'depression': "Belakangan ini, sering ngerasa sedih atau tertekan nggak?",
+        'headache': "Sakit kepala atau migrain, sering nggak akhir-akhir ini?",
+        'blood_pressure': "Gimana kondisi tekanan darah kamu belakangan ini?",
+        'sleep_quality': "Tidur kamu nyenyak nggak belakangan ini?",
+        'breathing_problem': "Ada masalah nafas atau sering sesak nggak?",
+        'noise_level': "Lingkungan kamu berisik nggak? Kayak di rumah, kampus, atau tempat kerja.",
+        'living_conditions': "Menurut kamu, kondisi tempat tinggal kamu gimana?",
+        'safety': "Kamu ngerasa aman nggak di lingkungan tempat tinggal kamu?",
+        'basic_needs': "Kebutuhan pokok kamu, kayak makan, tempat tinggal, udah cukup belum?",
+        'academic_performance': "Menurut kamu, gimana nilai atau performa akademis kamu?",
+        'study_load': "Beban tugas atau belajar kamu akhir-akhir ini berat nggak?",
+        'teacher_student_relationship': "Hubungan kamu sama guru atau dosen gimana?",
+        'future_career_concerns': "Khawatir nggak sama masa depan atau karier kamu?",
+        'social_support': "Kamu ngerasa didukung sama keluarga atau teman nggak?",
+        'peer_pressure': "Kamu sering ngerasa ditekan sama teman sebaya nggak?",
+        'extracurricular_activities': "Kamu sering ikut kegiatan ekstrakurikuler atau kegiatan lain nggak?",
+        'bullying': "Pernah nggak ngalamin bullying di sekolah/kampus atau di tempat lain ?"
     }
     min_max_values = {col: (df[col].min(), df[col].max()) for col in df.columns if col != 'stress_level'}
     return questions, min_max_values
@@ -98,15 +98,16 @@ def questions():
             if predicted_class == 0:
                 stress_level = "Ringan"
                 emoticon = "😊"
-                advice = "Kayaknya kamu cuma butuh istirahat sejenak. Coba luangkan waktu buat hal yang bikin rileks."
+                advice = ("Kamu cuma perlu istirahat sebentar. Coba santai sejenak, dengar musik favorit, atau jalan-jalan kecil. Kalau ada waktu, kamu juga bisa lakukan hobi yang bikin kamu happy, seperti baca buku, nonton film lucu atau berkumpul sama teman. Jangan lupa minum cukup air dan makan makanan yang sehat ya. Hal kecil ini bisa bikin kamu merasa lebih segar dan siap menghadapi aktivitas lagi.")
+
             elif predicted_class == 1:
                 stress_level = "Sedang"
                 emoticon = "😐"
-                advice = "Mungkin kamu bisa coba meditasi, relaksasi, dan ngobrol sama teman atau konselor."
+                advice = ("Stresnya lumayan nih. Coba deh meditasi, olahraga ringan, atau tarik napas dalam-dalam buat relaksasi. Ngobrol sama teman dekat atau keluarga juga bisa bantu kamu merasa lebih lega. Kalau ada waktu, coba keluar rumah dan nikmati udara segar, mungkin sambil jalan-jalan santai. Ingat, nggak apa-apa untuk berhenti sejenak dan fokus sama diri sendiri. Kamu nggak sendirian, dan ada banyak cara buat merasa lebih baik.")
             else:
                 stress_level = "Berat"
                 emoticon = "😟"
-                advice = "Cari dukungan profesional seperti konsultan atau terapis. Jangan ragu minta bantuan orang terdekat."
+                advice = ("Kondisinya kelihatan cukup berat. Jangan ragu buat cari bantuan profesional seperti konselor, psikolog, atau terapis. Mereka bisa bantu kamu memahami apa yang kamu rasakan dan memberikan solusi yang tepat. Selain itu, coba ngobrol sama orang yang kamu percaya, seperti keluarga atau sahabat, supaya kamu nggak merasa sendirian. Lakukan hal-hal kecil yang bikin nyaman, seperti dengar musik yang menenangkan atau menulis di jurnal tentang apa yang kamu rasakan. Ingat, nggak apa-apa untuk minta bantuan. Kamu punya hak untuk merasa lebih baik.")
 
             return render_template('result.html', stress_level=stress_level, advice=advice, emoticon=emoticon)
 
