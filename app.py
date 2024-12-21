@@ -20,9 +20,10 @@ print("Secret Key:", app.secret_key)  # Optional, untuk memverifikasi secret_key
 
 # Fungsi untuk memuat model
 def load_new_model():
-    model_path = os.path.join(os.getcwd(), 'model', 'stress_level_model_v2.h5')
+    model_path = 'model/stress_level_model_v2.h5'  # Perbaiki path
     try:
         model = tf.keras.models.load_model(model_path)
+        print("Model loaded successfully")
         return model
     except Exception as e:
         print(f"Error loading model: {e}")
@@ -30,9 +31,10 @@ def load_new_model():
 
 # Fungsi untuk memuat dataset dan scaler
 def load_dataset_and_scaler():
+    dataset_path = 'StressLevelDataset.csv'  # Perbaiki path
     try:
-        dataset_path = os.path.join(os.getcwd(), 'StressLevelDataset.csv')
         df = pd.read_csv(dataset_path)
+        print(f"Dataset loaded successfully from {dataset_path}")
         scaler = StandardScaler()
         df_scaled = scaler.fit_transform(df.drop(columns=['stress_level']))
         return df, scaler
@@ -51,7 +53,7 @@ def predict_stress(model, scaler, user_input):
 
 # Fungsi untuk mendapatkan pertanyaan dan min-max
 def get_stress_questions_and_min_max():
-    df = pd.read_csv('StressLevelDataset.csv')
+    df = pd.read_csv('/Users/macrizkyjackbar/Pribadi/Skripsi/stresslevel/StressLevelDataset.csv')  # Perbaiki path
     questions = {
         'anxiety_level': "Akhir-akhir ini, sering nggak ngerasa cemas atau gelisah?",
         'self_esteem': "Gimana nih, kamu lagi pede sama diri sendiri atau nggak?",
@@ -117,7 +119,7 @@ def questions():
             df, scaler = load_dataset_and_scaler()
             
             if model is None or df is None or scaler is None:
-                return render_template('result.html', stress_level="Error", advice="Terjadi kesalahan saat memuat data atau model.", emoticon="😞")
+                return render_template('result.html', stress_level="Error", advice="Terjadi kesalahan saat memuat data atau model.", emoticon="😞", error_message="Gagal memuat model atau dataset. Pastikan path sudah benar.")
 
             predicted_class = predict_stress(model, scaler, user_input)
 
@@ -153,6 +155,10 @@ def questions():
         current_index=current_index,
         total_questions=len(question_keys)
     )
+
+@app.route("/result")
+def result():
+    return render_template('result.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
